@@ -1,0 +1,6 @@
+from django.contrib.auth.models import User
+user = User.objects.create_user(username="testuser2", password="password123")
+
+order = Order.objects.create(user=user)
+order.product.add(product1, product2)
+
