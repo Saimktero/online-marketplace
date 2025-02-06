@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+# Работа с моделью Category
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -9,6 +10,7 @@ class Category(models.Model):
         return self.name
 
 
+# Работа с моделью Product
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -20,6 +22,7 @@ class Product(models.Model):
         return self.name
 
 
+# Работа с моделью Order
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product, related_name='orders')
