@@ -1,3 +1,5 @@
+# Маршруты (urls.py) → Определяют пути API (/api/orders/, /api/products/).
+
 from django.contrib import admin
 from django.urls import path, include
 
