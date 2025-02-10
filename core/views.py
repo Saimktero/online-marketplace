@@ -52,6 +52,11 @@ class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # Вьюха User
+class UserCreateListView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
 class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -70,10 +75,10 @@ class UserLoginView(APIView):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# Попытка привести к нижнему регистру фильтр
+"""""# Попытка привести к нижнему регистру фильтр
 def get_queryset(self):
     queryset = seper().get_queryset()
     name = self.request.GET.get('name')
     if name:
-        queryset =queryset.filter(name_icontains=name.lower()) # Приводим к нижнему регистру
-    return queryset
+        queryset = queryset.filter(name_icontains=name.lower()) # Приводим к нижнему регистру
+    return queryset"""""
