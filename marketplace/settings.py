@@ -131,9 +131,12 @@ REST_FRAMEWORK = {'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNum
                       'django_filters.rest_framework.DjangoFilterBackend',
                       'rest_framework.filters.SearchFilter',
                   ],
-                  'DEFAULT_AUTHENTICATION_CLASSES': (
+                  'DEFAULT_AUTHENTICATION_CLASSES': [
                       'rest_framework_simplejwt.authentication.JWTAuthentication',
-                  ),
+                  ],
+                  'DEFAULT_PERMISSION_CLASSES': [
+                      'rest_framework.permissions.IsAuthenticated'
+                  ],
                   }
 
 SIMPLE_JWT = {
@@ -143,8 +146,6 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
-
-CSRF_COOKIE_SECURE = False
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
