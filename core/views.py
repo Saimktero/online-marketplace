@@ -10,18 +10,21 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ProductFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
+from .permissions import IsAdminOrReadOnly
 
 
 # вьюха Category
 class CategoryListCreateView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [IsAdminUser]
 
 
 # вьюха Product
@@ -32,11 +35,13 @@ class ProductListCreateView(generics.ListCreateAPIView):
     filterset_class = ProductFilter
     filterset_fields = ['category']
     search_fields = ['name']
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAdminUser]
 
 
 # вьюха Order
@@ -56,13 +61,13 @@ class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
 class UserCreateListView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
 
 class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
 
 
 class UserLoginView(APIView):
@@ -80,7 +85,7 @@ class UserLoginView(APIView):
 
 """""# Попытка привести к нижнему регистру фильтр
 def get_queryset(self):
-    queryset = seper().get_queryset()
+    queryset = super().get_queryset()
     name = self.request.GET.get('name')
     if name:
         queryset = queryset.filter(name_icontains=name.lower()) # Приводим к нижнему регистру
