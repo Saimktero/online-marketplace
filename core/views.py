@@ -10,8 +10,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ProductFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser, AllowAny
-from .permissions import IsAdminOrReadOnly
+from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
+from .permissions import IsAdminOrReadOnly, IsOwnerOrAdmin
 
 
 # вьюха Category
@@ -50,11 +50,21 @@ class OrderListCreateView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['user']
+    permission_classes = [IsAuthenticated]  # Любой авторизованный пользователь может создать заказ
+
+    def get_queryset(self):
+        """
+            Обычные пользователи видят только свои заказы, админы – все.
+        """
+        if self.request.user.is_staff:
+            return Order.objects.all()
+        return Order.objects.filter(user=self.request.user)  # Обычный пользователь – только свои
 
 
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = [IsOwnerOrAdmin]  # Только владелец заказа или админ
 
 
 # Вьюха User
