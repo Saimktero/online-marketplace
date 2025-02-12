@@ -21,9 +21,26 @@ class ProductSerializer(serializers.ModelSerializer):
 
 # Работа с моделью Order
 class OrderSerializer(serializers.ModelSerializer):
+    total_price = serializers.SerializerMethodField()
+
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = ['id', 'products', 'total_price', 'created_at']
+        read_only_fields = ['id, created_at', 'total_price']
+
+    def create(self, validated_data):
+        """
+            Автоматически устанавливаем пользователя, создавшего заказ.
+        """
+        request = self.context.get('request')
+        validated_data['user'] = request.user
+        return super().create(validated_data)
+
+    def get_total_price(self, obj):
+        """
+            Автоматически вычисляет сумму заказа по продуктам.
+        """
+        return sum(product.price for product in obj.products.all())
 
 
 # Работа с моделью User

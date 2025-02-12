@@ -60,6 +60,14 @@ class OrderListCreateView(generics.ListCreateAPIView):
             return Order.objects.all()
         return Order.objects.filter(user=self.request.user)  # Обычный пользователь – только свои
 
+    def get_serializer_context(self):
+        """
+            Передаём request в сериализатор, чтобы он мог установить user.
+        """
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
