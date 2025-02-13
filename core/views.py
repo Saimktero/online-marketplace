@@ -29,7 +29,7 @@ class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 # вьюха Product
 class ProductListCreateView(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.select_related('category')
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = ProductFilter
@@ -39,14 +39,14 @@ class ProductListCreateView(generics.ListCreateAPIView):
 
 
 class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.select_related('category')
     serializer_class = ProductSerializer
     permission_classes = [IsAdminUser]
 
 
 # вьюха Order
 class OrderListCreateView(generics.ListCreateAPIView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.select_related('user').prefetch_related('products')
     serializer_class = OrderSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['user']
@@ -70,14 +70,14 @@ class OrderListCreateView(generics.ListCreateAPIView):
 
 
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.select_related('user').prefetch_related('products')
     serializer_class = OrderSerializer
     permission_classes = [IsOwnerOrAdmin]  # Только владелец заказа или админ
 
 
 # Вьюха User
 class UserCreateListView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
+    queryset = User.objects.prefetch_related('order_set')
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
 

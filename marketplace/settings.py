@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'core',
     'django_filters',
-
+    'debug_toolbar'
 ]
 
 ROOT_URLCONF = 'marketplace.urls'
+
+INTERNAL_IPS = ['127.0.0.1']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 TEMPLATES = [

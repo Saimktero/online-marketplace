@@ -1,6 +1,6 @@
 # Маршруты (urls.py) → Определяют пути API (/api/orders/, /api/products/).
 
-from django.urls import path
+from django.urls import path, include
 from .views import (CategoryListCreateView, CategoryDetailView,
                     ProductListCreateView, ProductDetailView,
                     OrderListCreateView, OrderDetailView,
@@ -33,4 +33,9 @@ urlpatterns += [
     path('users/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('users/', UserCreateListView.as_view(), name='user-list-create'),
+]
+
+# Debug
+urlpatterns += [
+    path('__debug__/', include('debug_toolbar.urls')),
 ]
