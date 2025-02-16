@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 from rest_framework.authentication import SessionAuthentication
+from .celery import celery_app
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
@@ -154,3 +155,11 @@ SIMPLE_JWT = {
 class CsrfExemptSessionAuthentication(SessionAuthentication):
     def enforce_csrf(self, request):
         return  # Отключаем проверку CSRF
+
+
+__all__ = ('celery_app',)
+
+# Настройки Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
