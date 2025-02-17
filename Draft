@@ -1,6 +1,50 @@
 from django.contrib.auth.models import User
 user = User.objects.create_user(username="testuser2", password="password123")
 
+
 order = Order.objects.create(user=user)
 order.product.add(product1, product2)
 
+
+from core.tasks import add
+result = add.delay(5, 10)
+print(result.get(timeout=5))
+
+
+
+from django.core.mail import send_mail
+send_mail(
+    "Тестовое письмо",
+    "Привет! Это тестовое письмо из Django.",
+    "priluckijkirill30@gmail.com",
+    ["priluckijkirill30@gmail.com"],
+    fail_silently=False,
+)
+
+
+# Отправка уведомления при заказе на email
+from core.models import Order, User
+from core.tasks import send_order_confirmation_email
+# Создаём заказ вручную
+user = User.objects.first()  # Берём первого пользователя
+order = Order.objects.create(user=user)
+# Запускаем задачу вручную
+send_order_confirmation_email.delay(user.email)
+
+
+# Проверка почты пользователя
+from django.contrib.auth.models import User
+user = User.objects.get(id=3)  # Подставь нужный ID
+print(f"Email из базы: '{user.email}'")
+
+
+# Путь к рабочей директории
+cd /mnt/c/PycharmProjects/Kirill
+
+
+# Запуск Redis
+redis-server --daemonize yes
+
+
+# Запуск Celery-воркера
+celery -A marketplace worker --loglevel=info

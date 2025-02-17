@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from .permissions import IsAdminOrReadOnly, IsOwnerOrAdmin
+from core.tasks import send_order_confirmation_email
 
 
 # вьюха Category
@@ -68,6 +69,19 @@ class OrderListCreateView(generics.ListCreateAPIView):
         context['request'] = self.request
         return context
 
+    def perform_create(self, serializer):
+        """Создаём заказ и вызываем фоновую задачу для отправки email"""
+        order = serializer.save()
+        order.refresh_from_db()
+
+        print(f'✅ Email пользователя перед отправкой в Celery: "{order.user.email}"')  # Логируем email перед отправкой
+
+        if order.user.email and order.user.email.strip():  # Проверяем, не пустой ли email
+            send_order_confirmation_email.delay(order.user.email)  # Запуск задачи в Celery
+            print(f'📨 Задача на отправку email добавлена в Celery для "{order.user.email}"')
+        else:
+            print(f'⚠ Email отсутствует у пользователя "{order.user.username}", задача не отправлена')
+
 
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.select_related('user').prefetch_related('products')
@@ -99,6 +113,8 @@ class UserLoginView(APIView):
             return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
 
 
 """""# Попытка привести к нижнему регистру фильтр

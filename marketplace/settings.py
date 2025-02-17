@@ -160,6 +160,18 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
 __all__ = ('celery_app',)
 
 # Настройки Celery
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Брокер сообщений
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+
+# Настройка хранения результатов задач (backend)
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+# Настройки отправки email через SMPT (пример для Gmail)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"  # SMPT-сервер Gmail
+EMAIL_PORT = 587  # Порт SMTP (587 для TLS, 465 для SSL)
+EMAIL_USE_TLS = True  # Включаем TLS (если используется SSL, нужно EMAIL_USE_SSL = True)
+EMAIL_HOST_USER = "priluckijkirill30@gmail.com"  # Мой email
+EMAIL_HOST_PASSWORD = "skel goco enfd hdav"  # Пароль (или App Password, если включена двухфакторка)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
