@@ -91,7 +91,7 @@ class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 # Вьюха User
 class UserCreateListView(generics.ListCreateAPIView):
-    queryset = User.objects.prefetch_related('order_set')
+    queryset = User.objects.prefetch_related('ordersп')
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
 
