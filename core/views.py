@@ -86,7 +86,7 @@ class OrderListCreateView(generics.ListCreateAPIView):
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.select_related('user').prefetch_related('products')
     serializer_class = OrderSerializer
-    permission_classes = [IsOwnerOrAdmin]  # Только владелец заказа или админ
+    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]  # Только владелец заказа или админ
 
 
 # Вьюха User
