@@ -45,6 +45,8 @@ cd /mnt/c/PycharmProjects/Kirill
 # Запуск Redis
 redis-server --daemonize yes
 
+(redis-server)
+
 
 # Запуск Celery-воркера
 celery -A marketplace worker --loglevel=info
