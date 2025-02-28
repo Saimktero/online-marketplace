@@ -6,6 +6,7 @@ from .views import (CategoryListCreateView, CategoryDetailView,
                     OrderListCreateView, OrderDetailView,
                     UserCreateView, UserLoginView, UserCreateListView)
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.conf import settings
 
 
 # Эндпоинты Category
@@ -36,6 +37,6 @@ urlpatterns += [
 ]
 
 # Debug
-urlpatterns += [
-    path('__debug__/', include('debug_toolbar.urls')),
-]
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]

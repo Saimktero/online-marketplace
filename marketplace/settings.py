@@ -175,3 +175,30 @@ EMAIL_USE_TLS = True  # Включаем TLS (если используется 
 EMAIL_HOST_USER = "priluckijkirill30@gmail.com"  # Мой email
 EMAIL_HOST_PASSWORD = "skel goco enfd hdav"  # Пароль (или App Password, если включена двухфакторка)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Включение кеширования прав доступа
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+AUTH_PERMISSION_CACHE = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
+    },
+}
