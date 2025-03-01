@@ -186,6 +186,7 @@ CACHES = {
 
 AUTH_PERMISSION_CACHE = True
 
+"""
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -202,3 +203,4 @@ LOGGING = {
         },
     },
 }
+"""

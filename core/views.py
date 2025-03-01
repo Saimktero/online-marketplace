@@ -13,7 +13,6 @@ from .permissions import IsAdminOrReadOnly, IsOwnerOrAdmin
 from core.tasks import send_order_confirmation_email
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
-from django.db import connection
 from django.core.cache import cache
 
 
@@ -65,7 +64,6 @@ class OrderListCreateView(BaseListCreateView):
     filterset_fields = ['user']
 
     def get_queryset(self):
-        print("\n 🚀 get_queryset() ВЫЗВАН!!!!!!!")
         """
             Обычные пользователи видят только свои заказы, админы – все.
         """
@@ -87,23 +85,7 @@ class OrderListCreateView(BaseListCreateView):
         # Кешируем результат на 15 минут
         cache.set(cache_key, result, 60 * 15)
 
-        # Вывод всех SQL-запросов, выполняемых в этом методе
-        print("\n 🔍 SQL-запросы в get_queryset:")
-        for query in connection.queries:
-            print(query["sql"])
-
         return result
-
-    def list(self, request, *args, **kwargs):
-        print("\n🚀 list() вызван!")  # Проверяем, вызывается ли list()
-
-        response = super().list(request, *args, **kwargs)
-
-        print("\n📌 SQL-запросы при обработке list():")
-        for query in connection.queries:
-            print(query["sql"])
-
-        return response
 
     def get_serializer_context(self):
         """
