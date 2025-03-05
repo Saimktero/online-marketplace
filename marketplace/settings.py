@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'core',
     'django_filters',
-    'debug_toolbar'
+    'debug_toolbar',
+    'corsheaders',
 ]
 
 ROOT_URLCONF = 'marketplace.urls'
@@ -61,7 +62,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # Открывает API для всех фронтов
 
 TEMPLATES = [
     {
@@ -130,7 +134,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REST_FRAMEWORK = {'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', 'PAGE_SIZE': 10,
+REST_FRAMEWORK = {'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+                  'PAGE_SIZE': 10,
                   'DEFAULT_FILTER_BACKENDS': [
                       'django_filters.rest_framework.DjangoFilterBackend',
                       'rest_framework.filters.SearchFilter',
@@ -141,6 +146,7 @@ REST_FRAMEWORK = {'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNum
                   'DEFAULT_PERMISSION_CLASSES': [
                       'rest_framework.permissions.IsAuthenticated'
                   ],
+
                   }
 
 SIMPLE_JWT = {

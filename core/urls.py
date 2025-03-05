@@ -1,13 +1,13 @@
 # Маршруты (urls.py) → Определяют пути API (/api/orders/, /api/products/).
 
+from django.conf import settings
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from .views import (CategoryListCreateView, CategoryDetailView,
                     ProductListCreateView, ProductDetailView,
                     OrderListCreateView, OrderDetailView,
                     UserCreateView, UserLoginView, UserCreateListView)
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from django.conf import settings
-
 
 # Эндпоинты Category
 urlpatterns = [
@@ -36,7 +36,8 @@ urlpatterns += [
     path('users/', UserCreateListView.as_view(), name='user-list-create'),
 ]
 
+
+
 # Debug
 if settings.DEBUG:
-    import debug_toolbar
     urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]

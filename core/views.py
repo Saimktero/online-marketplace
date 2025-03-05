@@ -1,6 +1,7 @@
 # Обработчики запросов (views.py) → API-логика (GET, POST, PUT, DELETE).
 
 from rest_framework import generics, status, permissions, filters
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .filters import ProductFilter
@@ -40,19 +41,21 @@ class CategoryDetailView(BaseRetrieveUpdateDestroyView):
 
 # вьюха Product
 class ProductListCreateView(BaseListCreateView):
-    queryset = Product.objects.select_related('category').all()
+    queryset = Product.objects.select_related('category').order_by('id').all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = ProductFilter
     filterset_fields = ['category']
     search_fields = ['name']
     permission_classes = [IsAdminOrReadOnly]
+    pagination_classes = PageNumberPagination
 
 
 class ProductDetailView(BaseRetrieveUpdateDestroyView):
     queryset = Product.objects.select_related('category').all()
     serializer_class = ProductSerializer
     permission_classes = [IsAdminOrReadOnly]
+    pagination_classes = PageNumberPagination
 
 
 # вьюха Order
