@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import { getProducts } from './api/products';
-import ProductList from './components/ProductList';
 import axios from 'axios';
-import Pagination from './components/Pagination';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Home } from './pages/Home';
+import { Login } from './pages/Login';
+import Products from './pages/Products';
+import Catalog from './pages/Catalog';
+import NavBar from './components/NavBar';
+
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -26,19 +31,25 @@ function App() {
   }
 
   return (
-    <div>
-      <header>
-        <h1>Маркетплейс</h1>
-      </header>
-      <main>
-        <h2>Каталог товаров</h2>
-        <ProductList products={products} />
-        <Pagination nextPage={nextPage} prevPage={prevPage} loadPage={loadPage} />
-      </main>
-      <footer>
-        <p>&copy; 2025 Онлайн-маркетплейс</p>
-      </footer>
-    </div>
+    <Router>
+      <NavBar />
+      <div>
+        <header>
+          <h1>Маркетплейс</h1>
+        </header>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/catalog" element={<Catalog />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/products" element={<Products products={products} nextPage={nextPage} prevPage={prevPage} loadPage={loadPage} />} />
+          </Routes>
+        </main>
+        <footer>
+          <p>&copy; 2025 Онлайн-маркетплейс</p>
+        </footer>
+      </div>
+    </Router>
   );
 }
 
