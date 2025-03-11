@@ -1,10 +1,10 @@
 import LoginForm from '../components/LoginForm';
 
-function Login() {
+function Login({ loadProducts }) {
   return(
     <div>
     <h1>Страница входа</h1>
-    <LoginForm />
+    <LoginForm loadProducts={loadProducts} />
     </div>
   );
 }

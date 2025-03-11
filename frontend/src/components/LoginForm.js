@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-function LoginForm() {
+
+function LoginForm({ loadProducts }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -15,9 +18,12 @@ function LoginForm() {
         username,
         password,
       });
+
       localStorage.setItem('access', response.data.access);
       localStorage.setItem('refresh', response.data.refresh);
-      alert('Авторизация успешна!');
+
+      loadProducts();
+      navigate('/products');
     } catch (err) {
       setError('Ошибка авторизации: неверные данные');
     }

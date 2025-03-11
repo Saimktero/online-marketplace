@@ -14,7 +14,17 @@ function App() {
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
 
+  const loadProducts = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/api/products/');
+      setProducts(response.data.results);
+    } catch (error) {
+      console.error('Ошибка загрузки товаров:', error);
+    }
+  };
+
   useEffect(() => {
+    loadProducts();
     getProducts().then(data => {
       setProducts(data.results);
       setNextPage(data.next);
@@ -41,7 +51,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/catalog" element={<Catalog />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login loadProducts={loadProducts} />} />
             <Route path="/products" element={<Products products={products} nextPage={nextPage} prevPage={prevPage} loadPage={loadPage} />} />
           </Routes>
         </main>
