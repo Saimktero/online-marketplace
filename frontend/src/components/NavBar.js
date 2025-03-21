@@ -14,6 +14,7 @@ function NavBar() {
     <nav>
       <Link to='/'>Главная</Link>
       <Link to='/catalog'>Каталог</Link>
+      <Link to='/cart'>Корзина</Link>
       {isAuthenticated ? (
         <button onClick={handeLogout}>Выйти</button>
       ) : (

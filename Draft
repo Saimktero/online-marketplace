@@ -38,18 +38,14 @@ user = User.objects.get(id=3)  # Подставь нужный ID
 print(f"Email из базы: '{user.email}'")
 
 
-# Путь к рабочей директории
+#Рабочая среда WSL
+sudo service redis-server start
+redis-cli ping
 cd /mnt/c/PycharmProjects/Kirill
+source ~/venv/bin/activate
+celery -A marketplace worker --loglevel=info --pool=solo
 
 
-# Запуск Redis
-redis-server --daemonize yes
-
-(redis-server)
-
-
-# Запуск Celery-воркера
-celery -A marketplace worker --loglevel=info
 
 
 print("🔍 API ответ:", response.data)  # Логируем ответ API

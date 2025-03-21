@@ -55,7 +55,7 @@ class ProductDetailView(BaseRetrieveUpdateDestroyView):
     queryset = Product.objects.select_related('category').all()
     serializer_class = ProductSerializer
     permission_classes = [IsAdminOrReadOnly]
-    pagination_classes = PageNumberPagination
+    pagination_classes = PageNumberPagination   
 
 
 # вьюха Order
@@ -100,7 +100,7 @@ class OrderListCreateView(BaseListCreateView):
 
     def perform_create(self, serializer):
         """Создаём заказ и вызываем фоновую задачу для отправки email"""
-        order = serializer.save(user=self.request.user)
+        order = serializer.save()
         order.refresh_from_db()
         if order.user.email:
             send_order_confirmation_email.delay(order.user.email)  # Запуск задачи в Celery

@@ -32,7 +32,7 @@ class ProductSerializer(BaseModelSerializers):
 class OrderSerializer(BaseModelSerializers):
     total_price = serializers.SerializerMethodField()
     products = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Order
@@ -43,7 +43,7 @@ class OrderSerializer(BaseModelSerializers):
         """
             Автоматически устанавливаем пользователя, создавшего заказ.
         """
-        validated_data['user'] = self.user
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
     @staticmethod

@@ -1,7 +1,7 @@
 import ProductList from '../components/ProductList';
 import Pagination from '../components/Pagination';
 
-function Products({ products, nextPage, prevPage, loadPage }) {
+function Products({ products, nextPage, prevPage, loadPage, addToCart }) {
   return (
     <div>
       <h2>Каталог товаров</h2>
