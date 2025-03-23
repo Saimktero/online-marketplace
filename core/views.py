@@ -61,7 +61,7 @@ class ProductDetailView(BaseRetrieveUpdateDestroyView):
 # вьюха Order
 @method_decorator(cache_page(60 * 50), name='dispatch')
 class OrderListCreateView(BaseListCreateView):
-    queryset = Order.objects.select_related('user').prefetch_related('products').all()
+    queryset = Order.objects.select_related('user').prefetch_related('items__product').all()
     serializer_class = OrderSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['user']
@@ -78,16 +78,14 @@ class OrderListCreateView(BaseListCreateView):
             return cached_queryset
 
         # Если в кеше нет данных, делаем запрос в БД
-        qs = super().get_queryset().select_related('user').prefetch_related('products')
+        qs = super().get_queryset().select_related('user').prefetch_related('items__product')
 
         if self.request.user.is_staff:
-            return qs
+            result = qs
         else:
             result = qs.filter(user=self.request.user).only('id', 'user', 'total_price', 'created_at')
 
-        # Кешируем результат на 15 минут
         cache.set(cache_key, result, 60 * 15)
-
         return result
 
     def get_serializer_context(self):
@@ -102,6 +100,11 @@ class OrderListCreateView(BaseListCreateView):
         """Создаём заказ и вызываем фоновую задачу для отправки email"""
         order = serializer.save()
         order.refresh_from_db()
+
+        # ❗ Очищаем кэш, чтобы обновился список
+        cache_key = f'user_orders_{order.user.id}'
+        cache.delete(cache_key)
+
         if order.user.email:
             send_order_confirmation_email.delay(order.user.email)  # Запуск задачи в Celery
             print(f'📨 Задача на отправку email добавлена в Celery для "{order.user.email}"')
@@ -109,7 +112,7 @@ class OrderListCreateView(BaseListCreateView):
 
 @method_decorator(cache_page(60 * 15), name='dispatch')
 class OrderDetailView(BaseRetrieveUpdateDestroyView):
-    queryset = Order.objects.select_related('user').prefetch_related('products').all()
+    queryset = Order.objects.select_related('user').prefetch_related('items__product').all()
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrAdmin]  # Только владелец заказа или админ
 

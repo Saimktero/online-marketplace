@@ -3,11 +3,10 @@
 from django.conf import settings
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
 from .views import (CategoryListCreateView, CategoryDetailView,
-                    ProductListCreateView, ProductDetailView,
+                    ProductListCreateView, ProductDetailView, UserCreateListView,
                     OrderListCreateView, OrderDetailView,
-                    UserCreateView, UserLoginView, UserCreateListView)
+                    UserCreateView, UserLoginView)
 
 # Эндпоинты Category
 urlpatterns = [
@@ -35,8 +34,6 @@ urlpatterns += [
     path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('users/', UserCreateListView.as_view(), name='user-list-create'),
 ]
-
-
 
 # Debug
 if settings.DEBUG:

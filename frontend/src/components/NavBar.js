@@ -16,7 +16,10 @@ function NavBar() {
       <Link to='/catalog'>Каталог</Link>
       <Link to='/cart'>Корзина</Link>
       {isAuthenticated ? (
+      <>
+        <Link to='/my-orders'>Мои заказы</Link>
         <button onClick={handeLogout}>Выйти</button>
+      </>
       ) : (
         <Link to='/login'>Войти</Link>
       )}

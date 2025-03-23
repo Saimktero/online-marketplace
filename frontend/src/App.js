@@ -8,6 +8,7 @@ import Catalog from './pages/Catalog';
 import NavBar from './components/NavBar';
 import Cart from './components/Cart';
 import ProductList from './components/ProductList';
+import MyOrders from './components/MyOrders'
 
 
 function App() {
@@ -65,7 +66,7 @@ function App() {
       };
 
       const orderData = {
-        products: cartItems.map(item => ({
+        items: cartItems.map(item =>  ({
           product_id: item.id,
           quantity: item.quantity
         }))
@@ -158,6 +159,7 @@ function App() {
             <Route path="/login" element={<Login loadProducts={loadProducts} />} />
             <Route path="/products" element={<ProductList products={products} nextPage={nextPage} prevPage={prevPage} loadPage={loadPage} addToCart={addToCart} />} />
             <Route path='/cart' element={<Cart cartItems={cartItems} handleCheckout={handleCheckout} />} />
+            <Route path='/my-orders' element={<MyOrders />} />
           </Routes>
         </main>
         <footer>
