@@ -7,14 +7,15 @@ import Login from './pages/Login';
 import Catalog from './pages/Catalog';
 import NavBar from './components/NavBar';
 import Cart from './components/Cart';
-import ProductList from './components/ProductList';
 import MyOrders from './components/MyOrders'
+import Products from './pages/Products'
 
 
 function App() {
   const [products, setProducts] = useState([]);
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
+  const [reloadOrders, setReloadOrders] = useState(false);
 
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('cartItems');
@@ -83,6 +84,7 @@ function App() {
       if (response.status === 201) {
         alert('Заказ успешно создан');
         setCartItems([]);
+        setReloadOrders(prev => !prev);
       } else {
         alert('Ошибка при оформлении заказа');
       }
@@ -157,9 +159,20 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/login" element={<Login loadProducts={loadProducts} />} />
-            <Route path="/products" element={<ProductList products={products} nextPage={nextPage} prevPage={prevPage} loadPage={loadPage} addToCart={addToCart} />} />
+            <Route
+              path="/products"
+                element={
+                  <Products
+                    products={products}
+                    nextPage={nextPage}
+                    prevPage={prevPage}
+                    loadPage={loadPage}
+                    addToCart={addToCart}
+                  />
+                }
+             />
             <Route path='/cart' element={<Cart cartItems={cartItems} handleCheckout={handleCheckout} />} />
-            <Route path='/my-orders' element={<MyOrders />} />
+            <Route path='/my-orders' element={<MyOrders reloadTrigger={reloadOrders} />} />
           </Routes>
         </main>
         <footer>

@@ -5,7 +5,7 @@ function Products({ products, nextPage, prevPage, loadPage, addToCart }) {
   return (
     <div>
       <h2>Каталог товаров</h2>
-      <ProductList products={products} />
+      <ProductList products={products} addToCart={addToCart} />
       <Pagination nextPage={nextPage} prevPage={prevPage} loadPage={loadPage} />
       </div>
   );

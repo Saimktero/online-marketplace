@@ -48,18 +48,20 @@ class ProductListCreateView(BaseListCreateView):
     filterset_fields = ['category']
     search_fields = ['name']
     permission_classes = [IsAdminOrReadOnly]
-    pagination_classes = PageNumberPagination
+    pagination_class = PageNumberPagination
 
 
 class ProductDetailView(BaseRetrieveUpdateDestroyView):
     queryset = Product.objects.select_related('category').all()
     serializer_class = ProductSerializer
     permission_classes = [IsAdminOrReadOnly]
-    pagination_classes = PageNumberPagination   
+    pagination_class = PageNumberPagination
 
 
 # вьюха Order
-@method_decorator(cache_page(60 * 50), name='dispatch')
+# @method_decorator(cache_page(60 * 50), name='dispatch')
+
+
 class OrderListCreateView(BaseListCreateView):
     queryset = Order.objects.select_related('user').prefetch_related('items__product').all()
     serializer_class = OrderSerializer
@@ -104,6 +106,7 @@ class OrderListCreateView(BaseListCreateView):
         # ❗ Очищаем кэш, чтобы обновился список
         cache_key = f'user_orders_{order.user.id}'
         cache.delete(cache_key)
+        print(f'🧹 Кэш очищен: {cache_key}')
 
         if order.user.email:
             send_order_confirmation_email.delay(order.user.email)  # Запуск задачи в Celery

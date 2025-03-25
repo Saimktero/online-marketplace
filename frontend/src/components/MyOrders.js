@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const MyOrders = () => {
+const MyOrders = ({ reloadTrigger }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchAllOrders = async () => {
       try {
         const token = localStorage.getItem('access');
         if (!token) {
@@ -17,14 +17,19 @@ const MyOrders = () => {
           return;
         }
 
-        const response = await axios.get('/api/orders/', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        let url = '/api/orders/';
+        let allOrders = [];
 
-        console.log('Ответ сервера:', response.data);
-        setOrders(response.data.results);
+        while (url) {
+          const response = await axios.get(url, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          allOrders = [...allOrders, ...response.data.results];
+          url = response.data.next;
+        }
+
+        setOrders(allOrders);
       } catch (err) {
         setError('Не удалось загрузить заказы.');
       } finally {
@@ -32,8 +37,8 @@ const MyOrders = () => {
       }
     };
 
-    fetchOrders();
-  }, [navigate]);
+    fetchAllOrders();
+  }, [navigate, reloadTrigger]);
 
   if (loading) return <p>Загрузка заказов..</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
