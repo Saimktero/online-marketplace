@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
 
 
 function LoginForm({ loadProducts }) {
@@ -14,7 +15,7 @@ function LoginForm({ loadProducts }) {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/users/token/', {
+      const response = await axiosInstance.post('http://localhost:8000/api/users/token/', {
         username,
         password,
       });
@@ -22,10 +23,12 @@ function LoginForm({ loadProducts }) {
       localStorage.setItem('access', response.data.access);
       localStorage.setItem('refresh', response.data.refresh);
 
+      toast.success('Успешный вход в аккаунт');
       loadProducts();
       navigate('/products');
     } catch (err) {
-      setError('Ошибка авторизации: неверные данные');
+      toast.error('Ошибка авторизации: неверные данные')
+      setError('Ошибка авторизации');
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const MyOrders = ({ reloadTrigger }) => {
   const [orders, setOrders] = useState([]);
@@ -21,16 +22,14 @@ const MyOrders = ({ reloadTrigger }) => {
         let allOrders = [];
 
         while (url) {
-          const response = await axios.get(url, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-
+          const response = await axiosInstance.get(url)
           allOrders = [...allOrders, ...response.data.results];
           url = response.data.next;
         }
 
         setOrders(allOrders);
       } catch (err) {
+        toast.error('Не удалось загрузить заказы.');
         setError('Не удалось загрузить заказы.');
       } finally {
         setLoading(false);

@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axiosInstance from '../axiosInstance';
 
 export const getProducts = async (page = 1) => {
-  const response = await axios.get(`http://localhost:8000/api/products/?page=${page}`);
+  const response = await axiosInstance.get(`http://localhost:8000/api/products/?page=${page}`);
   return response.data;
 };
