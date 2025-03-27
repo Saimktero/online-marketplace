@@ -1,7 +1,10 @@
 import os
 from decouple import config
 import dj_database_url
+from datetime import timedelta
 from pathlib import Path
+from rest_framework.authentication import SessionAuthentication
+from config.celery import celery_app
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -11,6 +14,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: v.split(','))
 
+INTERNAL_IPS = ['127.0.0.1']
 
 # Приложения и middleware
 INSTALLED_APPS = [
@@ -20,6 +24,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'django_filters',
+    'debug_toolbar',
+    'corsheaders',
     'core',
     'whitenoise.runserver_nostatic',
 ]
@@ -33,7 +42,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+# CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'config.urls'
 
@@ -100,3 +114,80 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+                  'PAGE_SIZE': 10,
+                  'DEFAULT_FILTER_BACKENDS': [
+                      'django_filters.rest_framework.DjangoFilterBackend',
+                      'rest_framework.filters.SearchFilter',
+                  ],
+                  'DEFAULT_AUTHENTICATION_CLASSES': [
+                      'rest_framework_simplejwt.authentication.JWTAuthentication',
+                  ],
+                  'DEFAULT_PERMISSION_CLASSES': [
+                      'rest_framework.permissions.IsAuthenticated'
+                  ],
+
+                  }
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+    def enforce_csrf(self, request):
+        return  # Отключаем проверку CSRF
+
+
+__all__ = ('celery_app',)
+
+# Настройки Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Брокер сообщений
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+# Настройка хранения результатов задач (backend)
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+# Настройки отправки email через SMPT (пример для Gmail)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"  # SMPT-сервер Gmail
+EMAIL_PORT = 587  # Порт SMTP (587 для TLS, 465 для SSL)
+EMAIL_USE_TLS = True  # Включаем TLS (если используется SSL, нужно EMAIL_USE_SSL = True)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Мой email
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # Пароль (или App Password, если включена двухфакторка)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Включение кеширования прав доступа
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+AUTH_PERMISSION_CACHE = True
+
+"""
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
+    },
+}
+"""
