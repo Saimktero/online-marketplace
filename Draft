@@ -43,7 +43,6 @@ sudo service redis-server start
 redis-cli ping
 cd /mnt/c/PycharmProjects/Kirill
 source ~/venv/bin/activate
-celery -A config worker --loglevel=info --pool=solo
 
 
 

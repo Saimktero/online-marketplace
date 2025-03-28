@@ -5,7 +5,7 @@ from celery import Celery
 # Указываем Django settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
-celery_app = Celery('marketplace')
+celery_app = Celery('config')
 celery_app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Добавляем настройку для устранения предупреждения
