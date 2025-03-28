@@ -47,7 +47,9 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 
 ROOT_URLCONF = 'config.urls'
 
@@ -125,7 +127,7 @@ REST_FRAMEWORK = {'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNum
                       'rest_framework_simplejwt.authentication.JWTAuthentication',
                   ],
                   'DEFAULT_PERMISSION_CLASSES': [
-                      'rest_framework.permissions.IsAuthenticated'
+                      'rest_framework.permissions.AllowAny'
                   ],
 
                   }
