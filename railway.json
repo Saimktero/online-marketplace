@@ -2,7 +2,6 @@
   "build": {
     "builder": "NIXPACKS",
     "buildCommand": "mkdir -p staticfiles && pip install -r requirements.txt && python3 manage.py migrate && python3 manage.py collectstatic --noinput",
-    "preDeployCommand": "bash scripts/migrate.sh",
     "startCommand": "gunicorn config.wsgi:application"
   }
 }
