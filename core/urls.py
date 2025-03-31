@@ -3,10 +3,11 @@
 from django.conf import settings
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import (CategoryListCreateView, CategoryDetailView, TriggerMigrateView,
+from .views import (CategoryListCreateView, CategoryDetailView,
                     ProductListCreateView, ProductDetailView, UserCreateListView,
                     OrderListCreateView, OrderDetailView,
                     UserCreateView, UserLoginView)
+
 
 # Эндпоинты Category
 urlpatterns = [
@@ -35,11 +36,11 @@ urlpatterns += [
     path('users/', UserCreateListView.as_view(), name='user-list-create'),
 ]
 
-# миграции в Railway
-urlpatterns += [
-    path('trigger-migrate/', TriggerMigrateView.as_view()),
-]
-
 # Debug
 if settings.DEBUG:
     urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]
+
+# миграции в Railway
+"""urlpatterns += [
+    path('trigger-migrate/', TriggerMigrateView.as_view()),
+]"""
