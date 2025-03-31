@@ -51,6 +51,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://online-marketplace-production-d156.up.railway.app',
+]
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
