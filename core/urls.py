@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import (CategoryListCreateView, CategoryDetailView, CreateSuperuserView,
+from .views import (CategoryListCreateView, CategoryDetailView,
                     ProductListCreateView, ProductDetailView, UserCreateListView,
                     OrderListCreateView, OrderDetailView,
                     UserCreateView, UserLoginView)
@@ -44,8 +44,8 @@ if settings.DEBUG:
 # ❗ Временное решение. Не использовать в продакшене.
 """urlpatterns += [
     path('trigger-migrate/', TriggerMigrateView.as_view()),
-]"""
+]
 
 urlpatterns += [
     path('create-superuser/', CreateSuperuserView.as_view())
-]
+]"""
