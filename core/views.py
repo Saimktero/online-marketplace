@@ -6,15 +6,20 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django.core.cache import cache
+from django.core.management import call_command
+from django.http import JsonResponse
+from django.views import View
 from django_filters.rest_framework import DjangoFilterBackend
 from core.tasks import send_order_confirmation_email
 from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, UserSerializer
 from .models import Category, Product, Order
 from .permissions import IsAdminOrReadOnly, IsOwnerOrAdmin
 from .filters import ProductFilter
+import os
 
 
 # Базовые классы для упрощения кода
@@ -149,8 +154,8 @@ class UserLoginView(APIView):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# Делаем миграции в Railway
-"""class TriggerMigrateView(View):
+# Делаем миграции для Railway
+class TriggerMigrateView(View):
     def get(self, request):
         if os.environ.get("ENV") == "production":
             try:
@@ -158,7 +163,23 @@ class UserLoginView(APIView):
                 return JsonResponse({"status": "migrated"})
             except Exception as e:
                 return JsonResponse({"status": "error", "detail": str(e)}, status=500)
-        return JsonResponse({"status": "ignored (not production"})"""
+        return JsonResponse({"status": "ignored (not production"})
+
+
+# Создание суперпользователя для Railway
+class CreateSuperuserView(View):
+    def get(self, request):
+        if os.environ.get("ENV") == "production":
+            User = get_user_model()
+            if not User.objects.filter(username="admin").exists():
+                User.objects.create_superuser(
+                    username="admin",
+                    email="admin@example.com",
+                    password="password1415"
+                )
+                return JsonResponse({"status": "created", "user": "admin"})
+            return JsonResponse({"status": "already exists"})
+        return JsonResponse({"status": "ignored (not production"})
 
 
 """""# Попытка привести к нижнему регистру фильтр
