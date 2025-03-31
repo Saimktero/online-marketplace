@@ -4,17 +4,21 @@ from rest_framework import generics, status, permissions, filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .filters import ProductFilter
-from .models import Category, Product, Order
-from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, UserSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django_filters.rest_framework import DjangoFilterBackend
-from .permissions import IsAdminOrReadOnly, IsOwnerOrAdmin
-from core.tasks import send_order_confirmation_email
 from django.views.decorators.cache import cache_page
+from django.views import View
 from django.utils.decorators import method_decorator
 from django.core.cache import cache
+from django.core.management import call_command
+from django.http import JsonResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from core.tasks import send_order_confirmation_email
+from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, UserSerializer
+from .models import Category, Product, Order
+from .permissions import IsAdminOrReadOnly, IsOwnerOrAdmin
+from .filters import ProductFilter
+import os
 
 
 # Базовые классы для упрощения кода
@@ -149,6 +153,16 @@ class UserLoginView(APIView):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+# Делаем миграции в Railway
+class TriggerMigrateView(View):
+    def get(self, request):
+        if os.environ.get("ENV") == "production":
+            try:
+                call_command("migrate")
+                return JsonResponse({"status": "migrated"})
+            except Exception as e:
+                return JsonResponse({"status": "error", "detail": str(e)}, status=500)
+        return JsonResponse({"status": "ignored (not production"})
 
 
 """""# Попытка привести к нижнему регистру фильтр

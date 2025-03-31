@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import (CategoryListCreateView, CategoryDetailView,
+from .views import (CategoryListCreateView, CategoryDetailView, TriggerMigrateView,
                     ProductListCreateView, ProductDetailView, UserCreateListView,
                     OrderListCreateView, OrderDetailView,
                     UserCreateView, UserLoginView)
@@ -33,6 +33,11 @@ urlpatterns += [
     path('users/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('users/', UserCreateListView.as_view(), name='user-list-create'),
+]
+
+# миграции в Railway
+urlpatterns += [
+    path('trigger-migrate/', TriggerMigrateView.as_view()),
 ]
 
 # Debug

@@ -1,2 +1,3 @@
 #!/bin/bash
-python3 manage.py migrate
+python3 manage.py migrate  # Ручной запуск миграций (альтернатива)
+
