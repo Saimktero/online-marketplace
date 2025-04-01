@@ -153,7 +153,7 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
 __all__ = ('celery_app',)
 
 # Настройки Celery
-CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Брокер сообщений
+CELERY_BROKER_URL = config("REDIS_URL")  # Брокер сообщений
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
