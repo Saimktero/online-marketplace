@@ -11,6 +11,7 @@ from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django.core.cache import cache
 from django.core.management import call_command
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views import View
 from django_filters.rest_framework import DjangoFilterBackend
@@ -180,6 +181,22 @@ class CreateSuperuserView(View):
                 return JsonResponse({"status": "created", "user": "admin"})
             return JsonResponse({"status": "already exists"})
         return JsonResponse({"status": "ignored (not production"})
+
+
+# Тест отправки письма от Celery
+class TestEmailView(View):
+    def get(self, request):
+        try:
+            send_mail(
+                'Проверка отправки письма',
+                'Если ты это читаешь - email работает',
+                'priluckijkirill30@gmail.com',
+                ['priluckijkirill30@gmail.com'],
+                fail_silently=False
+            )
+            return JsonResponse({'status': 'Письмо отправлено успешно'})
+        except Exception as e:
+            return JsonResponse({'status': 'Ошибка отправки', 'error': str(e)}, status=500)
 
 
 """""# Попытка привести к нижнему регистру фильтр
