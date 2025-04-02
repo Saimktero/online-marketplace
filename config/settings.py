@@ -158,7 +158,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
 # Настройка хранения результатов задач (backend)
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = config("REDIS_URL")
 
 # Настройки отправки email через SMPT (пример для Gmail)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
