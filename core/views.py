@@ -156,6 +156,7 @@ class UserLoginView(APIView):
 
 
 # Делаем миграции для Railway
+"""
 class TriggerMigrateView(View):
     def get(self, request):
         if os.environ.get("ENV") == "production":
@@ -165,9 +166,10 @@ class TriggerMigrateView(View):
             except Exception as e:
                 return JsonResponse({"status": "error", "detail": str(e)}, status=500)
         return JsonResponse({"status": "ignored (not production"})
-
+"""
 
 # Создание суперпользователя для Railway
+"""
 class CreateSuperuserView(View):
     def get(self, request):
         if os.environ.get("ENV") == "production":
@@ -181,9 +183,10 @@ class CreateSuperuserView(View):
                 return JsonResponse({"status": "created", "user": "admin"})
             return JsonResponse({"status": "already exists"})
         return JsonResponse({"status": "ignored (not production"})
-
+"""
 
 # Тест отправки письма от Celery
+"""
 class TestEmailView(View):
     def get(self, request):
         try:
@@ -197,12 +200,12 @@ class TestEmailView(View):
             return JsonResponse({'status': 'Письмо отправлено успешно'})
         except Exception as e:
             return JsonResponse({'status': 'Ошибка отправки', 'error': str(e)}, status=500)
+"""
 
-
-"""""# Попытка привести к нижнему регистру фильтр
+"""# Попытка привести к нижнему регистру фильтр
 def get_queryset(self):
     queryset = super().get_queryset()
     name = self.request.GET.get('name')
     if name:
         queryset = queryset.filter(name_icontains=name.lower()) # Приводим к нижнему регистру
-    return queryset"""""
+    return queryset"""

@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import (CategoryListCreateView, CategoryDetailView, TestEmailView,
+from .views import (CategoryListCreateView, CategoryDetailView,
                     ProductListCreateView, ProductDetailView, UserCreateListView,
                     OrderListCreateView, OrderDetailView,
                     UserCreateView, UserLoginView)
@@ -41,10 +41,11 @@ if settings.DEBUG:
     urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]
 
 # Test celery
+"""
 urlpatterns += [
     path('test-email/', TestEmailView.as_view()),
 ]
-
+"""
 
 # ❗ Временное решение. Не использовать в продакшене.
 """urlpatterns += [
