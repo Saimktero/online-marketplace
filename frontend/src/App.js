@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from './axiosInstance';
 
+const API = process.env.REACT_APP_API_BASE_URL;
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -37,7 +38,7 @@ function App() {
         }))
       };
 
-      const response = await axiosInstance.post('http://127.0.0.1:8000/api/orders/', orderData);
+      const response = await axiosInstance.post(`${API}/api/orders/`, orderData);
 
       if (response.status === 201) {
         toast.success('Заказ успешно создан');
@@ -70,7 +71,7 @@ function App() {
 
   const loadProducts = async () => {
     try {
-      const response = await axiosInstance.get('http://localhost:8000/api/products/');
+      const response = await axiosInstance.get(`${API}/api/products/`);
       setProducts(response.data.results);
     } catch (error) {
       console.error('Ошибка загрузки товаров:', error);

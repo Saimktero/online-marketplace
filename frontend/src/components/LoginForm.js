@@ -3,6 +3,7 @@ import axiosInstance from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 
+const API = process.env.REACT_APP_API_BASE_URL;
 
 function LoginForm({ loadProducts }) {
   const [username, setUsername] = useState('');
@@ -15,7 +16,7 @@ function LoginForm({ loadProducts }) {
     setError(null);
 
     try {
-      const response = await axiosInstance.post('http://localhost:8000/api/users/token/', {
+      const response = await axiosInstance.post(`${API}/users/token/`, {
         username,
         password,
       });

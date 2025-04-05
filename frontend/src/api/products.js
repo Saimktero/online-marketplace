@@ -1,6 +1,8 @@
 import axiosInstance from '../axiosInstance';
 
+const API = process.env.REACT_APP_API_BASE_URL;
+
 export const getProducts = async (page = 1) => {
-  const response = await axiosInstance.get(`http://localhost:8000/api/products/?page=${page}`);
+  const response = await axiosInstance.get(`${API}/api/products/?page=${page}`);
   return response.data;
 };
