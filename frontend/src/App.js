@@ -38,7 +38,7 @@ function App() {
         }))
       };
 
-      const response = await axiosInstance.post(`${API}/api/orders/`, orderData);
+      const response = await axiosInstance.post(`${API}/orders/`, orderData);
 
       if (response.status === 201) {
         toast.success('Заказ успешно создан');
