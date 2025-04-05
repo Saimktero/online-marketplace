@@ -53,6 +53,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     'https://online-marketplace-production-d156.up.railway.app',
+    'https://remarkable-analysis-production-9146.up.railway.app',
 ]
 
 ROOT_URLCONF = 'config.urls'
