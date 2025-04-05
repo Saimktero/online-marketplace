@@ -1,4 +1,3 @@
-import React,  { createContext, useState } from 'react';
 import Product from './Product';
 
 function ProductList({ products, addToCart }) {
