@@ -48,12 +48,13 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    'http://localhost:3000',
+    'https://marketplace-frontend-production-0785.up.railway.app',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://online-marketplace-production-d156.up.railway.app',
-    'https://site-production-8836.up.railway.app',
+    'https://marketplace-frontend-production-0785.up.railway.app',
 ]
 
 ROOT_URLCONF = 'config.urls'
