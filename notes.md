@@ -133,8 +133,8 @@ WHERE. В запросах с групповыми функциями вмест
 оператора GROUP BY.
 
 ## Последовательность выполнения операций на сервере:
-MySQL: FROM => WHERE = SELECT = GROUP BY = HAVING = ORDER BY = LIMIT.
 PostgreSQL: FROM => WHERE = GROUP BY = HAVING = SELECT = DISTINCT = ORDER BY = LIMIT.
+MySQL: FROM => WHERE = SELECT = GROUP BY = HAVING = ORDER BY = LIMIT.
 
 ------------------------------------------------------------------------------------------------------------------------
 
