@@ -9,3 +9,9 @@ journal.md
 HOW_TO_START.md
 db.sqlite3
 dump.rdb
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+venv/
+env/
