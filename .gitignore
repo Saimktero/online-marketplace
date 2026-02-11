@@ -2,7 +2,7 @@
 .idea/
 staticfiles/
 *.iml
-Draft.mdn
+Draft.md
 notes.md
 notes.js
 journal.md
@@ -15,3 +15,4 @@ __pycache__/
 *.sqlite3
 venv/
 env/
+tes.py
